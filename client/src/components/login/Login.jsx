@@ -1,11 +1,17 @@
-import React, { useState } from "react";
+import React, { useState, useContext, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import "./login.css";
+import { AuthContext } from "../../context/context";
 
 function Login() {
+  const navigate = useNavigate();
+  const { success, userInfo, login } = useContext(AuthContext);
   const [inputValue, setInputValue] = useState({
     email: "",
     password: "",
   });
+
+  console.log(userInfo);
   const handleChange = (e) => {
     const { name, value } = e.target;
     setInputValue({
@@ -15,26 +21,19 @@ function Login() {
   };
   const handleSubmit = async (e) => {
     e.preventDefault();
-    const response = await fetch("http://localhost:8000/api/users/login", {
-      method: "POST",
-      headers: { "content-Type": "application/json" },
-      body: JSON.stringify({
-        email: inputValue.email,
-        password: inputValue.password,
-      }),
-    });
-    const data = await response.json();
-    if (data) {
-      console.log(data);
-      // alert("login successful");
-    } else {
-      alert("Please check your username or password");
-    }
+    login(inputValue);
     setInputValue({ email: "", password: "" });
   };
 
+  useEffect(() => {
+    if (success) {
+      navigate("/");
+    }
+  }, [navigate, success]);
+
   return (
     <div className="App">
+      <h3>Hi {userInfo?.username}</h3>
       <form onSubmit={handleSubmit}>
         <input
           type="email"
