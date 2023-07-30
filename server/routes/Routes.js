@@ -1,12 +1,11 @@
 const User = require("../model/configureDB");
 const bcrypt = require("bcrypt");
-const jwt = require("jsonwebtoken");
+const { generateToken } = require("../generateToken");
 
 //register
 
 const Register = async (req, res) => {
   const { username, email, password } = req.body;
-  console.log(req.body);
   try {
     const user = await User.findOne({ email });
     if (user) {
@@ -44,14 +43,12 @@ const Login = async (req, res) => {
   if (user) {
     const comparePassword = await bcrypt.compare(password, user.password);
     if (comparePassword) {
-      const token = jwt.sign(
-        {
-          email: user.email,
-          password: user.password,
-        },
-        process.env.SECRET
-      );
-      res.status(200).json({ user: token });
+      res.status(200).json({
+        _id: user._id,
+        username: user.username,
+        email: user.email,
+        token: generateToken(user._id),
+      });
     } else {
       res.status(401).json({ massage: "Incorrect username or password" });
     }
