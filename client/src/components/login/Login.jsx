@@ -1,46 +1,58 @@
-import React, {useState} from 'react'
-import './login.css'
+import React, { useState, useContext, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
+import "./login.css";
+import { AuthContext } from "../../context/context";
 
 function Login() {
-    const[inputValue, setInputValue] = useState({
-        email:'',
-        password:''
-      })
-      const handleChange = (e)=>{
-        const{name,value} = e.target
-          setInputValue({
-          ...inputValue,
-          [name]:value
-        })
-        }
-      const handleSubmit = async(e)=>{
-        e.preventDefault()
-        const response = await fetch('http://localhost:5000/api/users/login',{
-          method:'POST',
-          headers:{'content-Type':'appplication/json'},
-          body:JSON.stringify({
-            email:inputValue.email,
-            password:inputValue.password
-          })
-        })
-        const data = await response.json()
-        if(data.user){
-          alert('login successful')
-        }else{
-          alert('Please check your username or password')
-        }
-        setInputValue({email:'',password:''})
-      }
-    
+  const navigate = useNavigate();
+  const { success, userInfo, login } = useContext(AuthContext);
+  const [inputValue, setInputValue] = useState({
+    email: "",
+    password: "",
+  });
+
+  console.log(userInfo);
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setInputValue({
+      ...inputValue,
+      [name]: value,
+    });
+  };
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    login(inputValue);
+    setInputValue({ email: "", password: "" });
+  };
+
+  useEffect(() => {
+    if (success) {
+      navigate("/");
+    }
+  }, [navigate, success]);
+
   return (
-    <div className='App'>
-        <form onSubmit={handleSubmit}>
-            <input type='email' name='email'  value={inputValue.email} placeholder='email' onChange={handleChange}/>
-            <input type='password' name='password'  value={inputValue.password} placeholder='password' onChange={handleChange}/>
-            <button type='submit'>Register</button>
-        </form>
+    <div className="App">
+      <h3>Hi {userInfo?.username}</h3>
+      <form onSubmit={handleSubmit}>
+        <input
+          type="email"
+          name="email"
+          value={inputValue.email}
+          placeholder="email"
+          onChange={handleChange}
+        />
+        <input
+          type="password"
+          name="password"
+          value={inputValue.password}
+          placeholder="password"
+          onChange={handleChange}
+        />
+        <button type="submit">Register</button>
+      </form>
     </div>
-  )
+  );
 }
 
-export default Login
+export default Login;

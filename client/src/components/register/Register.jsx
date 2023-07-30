@@ -1,13 +1,30 @@
-import React, {useState} from 'react'
-import axios from 'axios'
-import './register.css'
+import React, { useState } from "react";
+import axios from "axios";
+import "./register.css";
 
 function Register() {
-    const[inputValue, setInputValue] = useState({
-        username:'',
-        email:'',
-        password:''
+  const [inputValue, setInputValue] = useState({
+    username: "",
+    email: "",
+    password: "",
+  });
+  const [formErrors, setFormError] = useState({});
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setInputValue({
+      ...inputValue,
+      [name]: value,
+    });
+  };
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    setFormError(validate(inputValue));
+    console.log(inputValue);
+    axios
+      .post("http://localhost:8000/api/users/register", inputValue, {
+        headers: { "content-Type": "application/json" },
       })
+<<<<<<< HEAD
       const[formErrors, setFormError] = useState({})
       const handleChange = (e)=>{
         const{name,value} = e.target
@@ -34,38 +51,63 @@ function Register() {
             console.log(error);
         })
         
+=======
+      .then(({ data }) => {
+        console.log(data);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+>>>>>>> d89943cdf2a054fa6052abff79c3f570b433ebd5
 
-        
-        setInputValue({username:'',email:'',password:''})
-      }
+    // setInputValue({ username: "", email: "", password: "" });
+  };
 
-      const validate = (value)=>{
-        let error = {}
-        if(!value.username){
-          error.username = 'Username required'
-        }
-        if(!value.email){
-          error.email = 'Email required'
-        }
-        if(!value.password){
-          error.password = 'Enter a password'
-        }
-        return error
-      }
-    
+  const validate = (value) => {
+    let error = {};
+    if (!value.username) {
+      error.username = "Username required";
+    }
+    if (!value.email) {
+      error.email = "Email required";
+    }
+    if (!value.password) {
+      error.password = "Enter a password";
+    }
+    return error;
+  };
+
   return (
-    <div className='App'>
-        <form onSubmit={handleSubmit}>
-            <input type='text' name='username' value={inputValue.username} placeholder='username' onChange={handleChange}/>
-            <p>{formErrors.username}</p>
-            <input type='email' name='email'  value={inputValue.email} placeholder='email' onChange={handleChange}/>
-            <p>{formErrors.email}</p>
-            <input type='password' name='password'  value={inputValue.password} placeholder='password' onChange={handleChange}/>
-            <p>{formErrors.password}</p>
-            <button type='submit'>Register</button>
-        </form>
+    <div className="App">
+      <form onSubmit={handleSubmit}>
+        <input
+          type="text"
+          name="username"
+          value={inputValue.username}
+          placeholder="username"
+          onChange={handleChange}
+        />
+        <p>{formErrors.username}</p>
+        <input
+          type="email"
+          name="email"
+          value={inputValue.email}
+          placeholder="email"
+          onChange={handleChange}
+        />
+        <p>{formErrors.email}</p>
+        <input
+          type="password"
+          name="password"
+          value={inputValue.password}
+          placeholder="password"
+          onChange={handleChange}
+        />
+        <p>{formErrors.password}</p>
+        <button type="submit">Register</button>
+      </form>
     </div>
-  )
+  );
 }
 
-export default Register
+export default Register;
