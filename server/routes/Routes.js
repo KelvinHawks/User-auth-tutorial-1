@@ -57,9 +57,5 @@ const Login = async (req, res) => {
   }
 };
 
-<<<<<<< HEAD
 
 module.exports = {Login, Register}
-=======
-module.exports = { Login, Register };
->>>>>>> d89943cdf2a054fa6052abff79c3f570b433ebd5
