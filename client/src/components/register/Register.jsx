@@ -22,7 +22,7 @@ function Register() {
         console.log(inputValue);
        fetch('http://localhost:5000/api/users/register',{
           method:'POST',
-          headers:{'content-Type':'appplication/json'},
+          headers:{'content-Type':'application/json'},
           body:{
             username:inputValue.username,
             email:inputValue.email,
